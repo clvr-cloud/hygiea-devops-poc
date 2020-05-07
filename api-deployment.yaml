@@ -1,0 +1,49 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.override.yml
+    kompose.version: 1.20.0 ()
+  creationTimestamp: null
+  labels:
+    io.kompose.service: api
+  name: api
+spec:
+  replicas: 2
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.override.yml
+        kompose.version: 1.20.0 ()
+      creationTimestamp: null
+      labels:
+        io.kompose.service: api
+    spec:
+      containers:
+      - env:
+        - name: SKIP_PROPERTIES_BUILDER
+          value: "true"
+        - name: dbhost
+          value: db
+        - name: dbname
+          value: dashboarddb
+        - name: key
+          value: $$$$$$$$$$$$$$$$$$$$$$$
+        - name: logRequest
+          value: "true"
+        - name: logSplunkRequest
+          value: "false"
+        image: registry.gitlab.com/clvrcloud/hygieia-api
+        name: api
+        resources:
+          requests:
+            cpu: 50m
+            memory: 50Mi
+          limits:
+            cpu: 495m
+            memory: 565Mi
+      restartPolicy: Always
+      imagePullSecrets:
+      - name: regcred
+status: {}

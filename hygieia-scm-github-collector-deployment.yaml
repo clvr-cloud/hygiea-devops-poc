@@ -1,0 +1,57 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.override.yml
+    kompose.version: 1.20.0 ()
+  creationTimestamp: null
+  labels:
+    io.kompose.service: hygieia-scm-github-collector
+  name: hygieia-scm-github-collector
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.override.yml
+        kompose.version: 1.20.0 ()
+      creationTimestamp: null
+      labels:
+        io.kompose.service: hygieia-scm-github-collector
+    spec:
+      containers:
+      - env:
+        - name: GITHUB_COMMIT_THRESHOLD_DAYS
+          value: "15"
+        - name: GITHUB_CRON
+          value: 0 * * * * *
+        - name: GITHUB_ERROR_THRESHOLD
+          value: "2"
+        - name: GITHUB_HOST
+          value: github.com
+        - name: GITHUB_KEY
+          value: AAAAAAAAAAAAAAAAAAAAAAAAA
+        - name: PERSONAL_ACCESS_TOKEN
+          value: BBBBBBBBBBBBBBBBBBBBBBBBB
+        - name: dbhost
+          value: db
+        - name: dbname
+          value: dashboarddb
+        - name: dbport
+          value: "27017"
+        - name: logging.file
+          value: ./logs/github.log
+        image: registry.gitlab.com/clvrcloud/hygieia-scm-github-collector
+        name: hygieia-scm-github-collector
+        resources:
+          requests:
+            cpu: 50m
+            memory: 50Mi
+          limits:
+            cpu: 495m
+            memory: 565Mi
+      restartPolicy: Always
+      imagePullSecrets:
+      - name: regcred
+status: {}
